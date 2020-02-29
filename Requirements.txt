@@ -1,0 +1,54 @@
+### General Requirements ###
+
+VPC with two subnets
+NAT Gateway (The two subents access the internet through this gateway)
+Elasticache Memcache instance (2 nodes (2 AZs) of t2.small using the default VPC security group)
+
+
+
+### Feed Function ###
+
+Parameters:
+S3 bucket name
+Region
+Elasticache Endpoint
+
+
+S3 Bucket to host the uploaded images (Same region as the VPC);
+
+
+Trigger:
+file creation event type in the S3 bucket; 
+
+
+Function Role IAM Policy Attachement;
+1. A Basic AWS Lambda Execution Policy (Will be created upon function creation)
+2. AmazonRekognitionReadOnlyAccess (AWS managed policy)
+3. AWSLambdaVPCAccessExecutionRole (AWS managed policy)
+4. S3 Bucket policy (Restrictive to the bucket mentioned above)
+
+
+VPC Configuration:
+The 2 subnets of the VPC mentioned in general requirements and the default VPC security group.
+
+
+
+### Notify Function ###
+
+Parameters:
+Elasticache Endpoint
+
+
+Trigger:
+CloudWatch Events rule based on the following cron expression:
+
+* * ? * * * (Every minute)
+
+
+Function Role IAM Policy Attachement;
+1. A Basic AWS Lambda Execution Policy (Will be created upon function creation)
+2. AWSLambdaVPCAccessExecutionRole (AWS managed policy)
+
+
+VPC Configuration:
+The 2 subnets of the VPC mentioned in general requirements and the default VPC security group. 
